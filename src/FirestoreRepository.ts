@@ -21,27 +21,37 @@ class FirestoreRepository implements Repository {
   }
 
   /**
-   * @description Get data for the provided key.
+   * @description Get data for the provided key. If the data is a stringified object, parse it into an object first.
    */
   async getData(key: string): Promise<any> {
     const doc = await this.collection.doc(key).get();
 
-    if (!doc.exists) {
-      return;
-    } else {
-      return doc.data();
-    }
+    if (!doc.exists) return;
+
+    const docData = doc.data();
+    const data = (() => {
+      try {
+        const _data = JSON.parse(docData.value);
+        return _data;
+      } catch (error) {
+        return docData;
+      }
+    })();
+
+    return data;
   }
 
   /**
-   * @description Put data at the provided key.
+   * @description Put data at the provided document key. Stringify data and place it under a "value" key.
    */
   async updateData(key: string, data: any): Promise<void> {
+    const _data = typeof data === 'string' ? data : JSON.stringify(data);
+
     await this.collection
       .doc(key)
-      .set(data)
-      .catch(() => {
-        console.warn('Error updating!');
+      .update({ value: _data })
+      .catch((error: any) => {
+        console.error('Error updating!', error.message);
       });
   }
 
@@ -52,8 +62,8 @@ class FirestoreRepository implements Repository {
     await this.collection
       .doc(key)
       .delete()
-      .catch(() => {
-        console.warn('Error deleting!');
+      .catch((error: any) => {
+        console.error('Error deleting!', error.message);
       });
   }
 }

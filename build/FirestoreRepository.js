@@ -17,21 +17,29 @@ class FirestoreRepository {
     getData(key) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const doc = yield this.collection.doc(key).get();
-            if (!doc.exists) {
+            if (!doc.exists)
                 return;
-            }
-            else {
-                return doc.data();
-            }
+            const docData = doc.data();
+            const data = (() => {
+                try {
+                    const _data = JSON.parse(docData.value);
+                    return _data;
+                }
+                catch (error) {
+                    return docData;
+                }
+            })();
+            return data;
         });
     }
     updateData(key, data) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const _data = typeof data === 'string' ? data : JSON.stringify(data);
             yield this.collection
                 .doc(key)
-                .set(data)
-                .catch(() => {
-                console.warn('Error updating!');
+                .update({ value: _data })
+                .catch((error) => {
+                console.error('Error updating!', error.message);
             });
         });
     }
@@ -40,8 +48,8 @@ class FirestoreRepository {
             yield this.collection
                 .doc(key)
                 .delete()
-                .catch(() => {
-                console.warn('Error deleting!');
+                .catch((error) => {
+                console.error('Error deleting!', error.message);
             });
         });
     }
