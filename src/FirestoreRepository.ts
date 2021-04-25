@@ -43,13 +43,14 @@ class FirestoreRepository implements Repository {
 
   /**
    * @description Put data at the provided document key. Stringify data and place it under a "value" key.
+   * We use `.set` instead of `.update` so it will create/overwrite rather than fail on non-existing data.
    */
   async updateData(key: string, data: any): Promise<void> {
     const _data = typeof data === 'string' ? data : JSON.stringify(data);
 
     await this.collection
       .doc(key)
-      .update({ value: _data })
+      .set({ value: _data })
       .catch((error: any) => {
         console.error('Error updating!', error.message);
       });

@@ -37,7 +37,7 @@ class FirestoreRepository {
             const _data = typeof data === 'string' ? data : JSON.stringify(data);
             yield this.collection
                 .doc(key)
-                .update({ value: _data })
+                .set({ value: _data })
                 .catch((error) => {
                 console.error('Error updating!', error.message);
             });
