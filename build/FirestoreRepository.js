@@ -18,11 +18,9 @@ class FirestoreRepository {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const doc = yield this.collection.doc(key).get();
             if (!doc.exists) {
-                console.log('No such document!');
                 return;
             }
             else {
-                console.log('Document data:', doc.data());
                 return doc.data();
             }
         });
@@ -32,9 +30,6 @@ class FirestoreRepository {
             yield this.collection
                 .doc(key)
                 .set(data)
-                .then(() => {
-                console.log('Finished updating data');
-            })
                 .catch(() => {
                 console.warn('Error updating!');
             });
@@ -45,9 +40,6 @@ class FirestoreRepository {
             yield this.collection
                 .doc(key)
                 .delete()
-                .then(() => {
-                console.log('Finished deleting data');
-            })
                 .catch(() => {
                 console.warn('Error deleting!');
             });
