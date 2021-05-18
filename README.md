@@ -1,45 +1,38 @@
 # triplecheck-repository-firestore
 
+![TripleCheck database repository](readme/triplecheck-repository.png)
+
 ## TripleCheck: Firestore database repository
 
 Database utility for using Firestore with TripleCheck broker. It implements the repository base at [triplecheck-core](https://github.com/mikaelvesavuori/triplecheck-core).
 
 ## Instructions
 
-**@TODO: Finish**
-
-In your `triplecheck-broker` implementation, do a regular import for `triplecheck-repository-firestore` and pass the repository to the broker. In a local demo context, an implementation could look like:
+In your `triplecheck-broker` implementation, do a regular import for `triplecheck-repository-firestore` and pass the repository to the broker. A basic implementation could look like:
 
 ```TypeScript
 import { FirestoreRepository } from 'triplecheck-repository-firestore';
 import { TripleCheckBroker } from 'triplecheck-broker';
 
-/**
- * Implementation example
- */
-async function demo() {
-  // Standard setup for Firestore
-  // Keyfile only really needed when running outside of GCP context
-  const config = {
-    projectId: 'your-project-id',
-    keyFilename: 'src/keyfile.json'
-  };
+// If inside Google Cloud Platform:
+// Pass the repo your Firestore configuration and the collection name
+const repository = FirestoreRepository(undefined, "your-database-name");
 
-  // Pass the repo your Firestore configuration and the collection name
-  const repository = FirestoreRepository(config, 'my-collection');
+// If outside Google Cloud Platform:
+// Pass the repo your Firestore configuration and the collection name
+// Keyfile/config only needed when running outside of GCP context
+// @see https://cloud.google.com/firestore/docs/quickstart-servers
+const repository = FirestoreRepository({
+  projectId: 'your-project-id',
+  keyFilename: 'keyfile.json'
+}, "your-database-name");
 
-  const { responseData, status, headers } = await TripleCheckBroker(
-    request,
-    payload,
-    repository
-  );
+const request = "Get this from your API request and transform it as needed";
+const payload = "Body";
 
-  return {
-    body: JSON.stringify(responseData),
-    status,
-    headers
-  }
-}
-
-demo();
+const { responseData, status, headers } = await TripleCheckBroker(
+  request,
+  payload,
+  repository
+);
 ```

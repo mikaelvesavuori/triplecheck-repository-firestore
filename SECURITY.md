@@ -7,7 +7,6 @@ These versions of `triplecheck-repository-firestore` are currently being support
 | Version | Supported |
 | ------- | --------- |
 | 1.x.x   | :x:       |
-| 0.x.x   | :x:       |
 
 ## Reporting a Vulnerability
 
