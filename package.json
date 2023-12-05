@@ -24,7 +24,7 @@
     "docs": "npx typedoc src"
   },
   "dependencies": {
-    "@google-cloud/firestore": "^4.11.1",
+    "@google-cloud/firestore": "^6.2.0",
     "triplecheck-core": "latest"
   },
   "devDependencies": {
